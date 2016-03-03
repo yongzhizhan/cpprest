@@ -1,20 +1,20 @@
-#ifndef CPPREST_IREQUEST_H
-#define CPPREST_IREQUEST_H
+#ifndef CPPREST_REQUEST_H
+#define CPPREST_REQUEST_H
 
 #include <string>
 #include <map>
 #include <string.h>
 #include <memory_buffer.h>
+#include "zshare_def.h"
 
 namespace cpprest{
 
-typedef std::map<std::string, std::string> MT_HttpHeaders;
-
-class IRequest
+class Request
 {
 public:
     std::string path_;
-    MT_HttpHeaders headers_;
+    Method method;
+    HttpHeaders headers_;
     kw::MemoryBuffer content_;
 };
 

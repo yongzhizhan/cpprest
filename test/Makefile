@@ -80,9 +80,6 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_platformsupport_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_printsupport.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_printsupport_private.pri \
-		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_qml.pri \
-		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_qmltest.pri \
-		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_quick.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_sql.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_sql_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_testlib.pri \
@@ -168,9 +165,6 @@ Makefile: test.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64/qmake.conf
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_platformsupport_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_printsupport.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_printsupport_private.pri \
-		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_qml.pri \
-		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_qmltest.pri \
-		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_quick.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_sql.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_sql_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_testlib.pri \
@@ -222,9 +216,6 @@ Makefile: test.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64/qmake.conf
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_platformsupport_private.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_printsupport.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_printsupport_private.pri:
-/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_qml.pri:
-/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_qmltest.pri:
-/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_quick.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_sql.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_sql_private.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_testlib.pri:
@@ -285,20 +276,32 @@ compiler_clean:
 cpprest_test.o: cpprest_test.cc ../build/inc/cpprest.h \
 		../kaiwu/build/inc/mutex.h \
 		../kaiwu/build/inc/Singleton.h \
-		../build/inc/irequest.h \
-		../kaiwu/build/inc/memory_buffer.h \
-		../build/inc/iresponse.h \
 		../build/inc/http_server.h \
 		../kaiwu/build/inc/thread.h \
-		../kaiwu/build/inc/string_arg.h
+		../kaiwu/build/inc/string_arg.h \
+		../kaiwu/build/inc/signal_slot.h \
+		../kaiwu/build/inc/shared_lib.h \
+		../kaiwu/build/inc/fmt.h \
+		../build/inc/request.h \
+		../kaiwu/build/inc/memory_buffer.h \
+		../build/inc/zshare_def.h \
+		../build/inc/response.h \
+		../build/inc/router.h \
+		../kaiwu/build/inc/thread_pool.h \
+		../kaiwu/build/inc/condition.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o cpprest_test.o cpprest_test.cc
 
 http_server_test.o: http_server_test.cc ../build/inc/http_server.h \
 		../kaiwu/build/inc/thread.h \
 		../kaiwu/build/inc/string_arg.h \
-		../build/inc/irequest.h \
+		../kaiwu/build/inc/signal_slot.h \
+		../kaiwu/build/inc/shared_lib.h \
+		../kaiwu/build/inc/fmt.h \
+		../kaiwu/build/inc/mutex.h \
+		../build/inc/request.h \
 		../kaiwu/build/inc/memory_buffer.h \
-		../build/inc/iresponse.h
+		../build/inc/zshare_def.h \
+		../build/inc/response.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o http_server_test.o http_server_test.cc
 
 main.o: main.cc 
@@ -307,9 +310,19 @@ main.o: main.cc
 make_handler_info_test.o: make_handler_info_test.cpp ../build/inc/cpprest.h \
 		../kaiwu/build/inc/mutex.h \
 		../kaiwu/build/inc/Singleton.h \
-		../build/inc/irequest.h \
+		../build/inc/http_server.h \
+		../kaiwu/build/inc/thread.h \
+		../kaiwu/build/inc/string_arg.h \
+		../kaiwu/build/inc/signal_slot.h \
+		../kaiwu/build/inc/shared_lib.h \
+		../kaiwu/build/inc/fmt.h \
+		../build/inc/request.h \
 		../kaiwu/build/inc/memory_buffer.h \
-		../build/inc/iresponse.h
+		../build/inc/zshare_def.h \
+		../build/inc/response.h \
+		../build/inc/router.h \
+		../kaiwu/build/inc/thread_pool.h \
+		../kaiwu/build/inc/condition.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o make_handler_info_test.o make_handler_info_test.cpp
 
 ####### Install

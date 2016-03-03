@@ -28,9 +28,14 @@ POST_TARGETDEPS += .copy_head_file
 HEADERS += \
     cpprest.h \
     http_server.h \
-    iresponse.h \
-    irequest.h
+    router.h \
+    request.h \
+    response.h \
+    zshare_def.h \
+    http_client.h
 
 SOURCES += \
     cpprest.cc \
-    http_server.cc
+    http_server.cc \
+    router.cc \
+    http_client.cpp

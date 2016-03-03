@@ -76,9 +76,6 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_platformsupport_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_printsupport.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_printsupport_private.pri \
-		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_qml.pri \
-		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_qmltest.pri \
-		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_quick.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_sql.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_sql_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_testlib.pri \
@@ -164,9 +161,6 @@ Makefile: hello.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64/qmake.con
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_platformsupport_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_printsupport.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_printsupport_private.pri \
-		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_qml.pri \
-		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_qmltest.pri \
-		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_quick.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_sql.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_sql_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_testlib.pri \
@@ -218,9 +212,6 @@ Makefile: hello.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64/qmake.con
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_platformsupport_private.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_printsupport.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_printsupport_private.pri:
-/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_qml.pri:
-/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_qmltest.pri:
-/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_quick.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_sql.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_sql_private.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_testlib.pri:
@@ -278,23 +269,10 @@ compiler_clean:
 
 ####### Compile
 
-main.o: main.cpp ../../build/inc/http_server.h \
-		../../kaiwu/build/inc/thread.h \
-		../../kaiwu/build/inc/string_arg.h \
-		../../build/inc/irequest.h \
-		../../kaiwu/build/inc/memory_buffer.h \
-		../../build/inc/iresponse.h \
-		../../build/inc/cpprest.h \
-		../../kaiwu/build/inc/mutex.h \
-		../../kaiwu/build/inc/Singleton.h
+main.o: main.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
 
-test.o: test.cpp ../../build/inc/cpprest.h \
-		../../kaiwu/build/inc/mutex.h \
-		../../kaiwu/build/inc/Singleton.h \
-		../../build/inc/irequest.h \
-		../../kaiwu/build/inc/memory_buffer.h \
-		../../build/inc/iresponse.h
+test.o: test.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o test.o test.cpp
 
 ####### Install

@@ -20,14 +20,14 @@ public:
 
     }
 
-    void RecvCallback(void* req_handle, const cpprest::IRequest& req)
+    void RecvCallback(void* req_handle, const cpprest::Request& req)
     {
-        cpprest::IResponse response;
+        kw::shared_ptr<cpprest::Response> response(new cpprest::Response);
 
         http_server_->Reply(req_handle, response);
     }
 
-    void RecvCallbackDealy(void* req_handle, const cpprest::IRequest& req)
+    void RecvCallbackDealy(void* req_handle, const cpprest::Request& req)
     {
         cur_req_handle_ = req_handle;
         thread_.Start();
@@ -35,7 +35,7 @@ public:
 
     void ReplayDelay()
     {
-        cpprest::IResponse response;
+        kw::shared_ptr<cpprest::Response> response(new cpprest::Response);
 
         sleep(3);
         http_server_->Reply(cur_req_handle_, response);
@@ -50,26 +50,8 @@ protected:
 TEST_F(HttpServerTest, Default)
 {
     return;
-    http_server_.reset(new cpprest::HttpServer("0.0.0.0", 12345));
-    http_server_->SetRecvCallback(std::tr1::bind(&HttpServerTest::RecvCallback, this,
-                                                 std::tr1::placeholders::_1,
-                                                 std::tr1::placeholders::_2));
-    http_server_->Start();
-
-    sleep(2);
-
-    http_server_->Stop();
 }
 
 TEST_F(HttpServerTest, Delay)
 {
-    http_server_.reset(new cpprest::HttpServer("0.0.0.0", 54321));
-    http_server_->SetRecvCallback(std::tr1::bind(&HttpServerTest::RecvCallbackDealy, this,
-                                                 std::tr1::placeholders::_1,
-                                                 std::tr1::placeholders::_2));
-    http_server_->Start();
-
-    sleep(1500);
-
-    http_server_->Stop();
 }

@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <cpprest.h>
 
+/*
 class MakeHandlerInfoTest : public testing::Test
 {
 public:
@@ -35,3 +36,4 @@ TEST_F(MakeHandlerInfoTest, Default)
     delete handler_info->handler_;
     delete handler_info;
 }
+*/

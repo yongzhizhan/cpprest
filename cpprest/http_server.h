@@ -9,8 +9,9 @@
 #include <event2/event.h>
 #include <event2/http.h>
 #include <thread.h>
-#include "irequest.h"
-#include "iresponse.h"
+#include <signal_slot.h>
+#include "request.h"
+#include "response.h"
 
 namespace cpprest
 {
@@ -18,37 +19,39 @@ namespace cpprest
 class HttpServer : public boost::noncopyable
 {
 public:
-    typedef std::tr1::function<void(void*, IRequest&)> RecvCallback;
+    typedef kw::Signal<void(void*, kw::shared_ptr<Request>&)> RecvSignal;
 
-public:
-    HttpServer(const char* listen_addr, unsigned short listen_port);
-    ~HttpServer();
+    HttpServer		(const char* listen_addr="0.0.0.0", unsigned short listen_port=8080);
+    ~HttpServer		(void);
 
     bool Start();
     bool Stop();
+    void Join();
 
-    void SetRecvCallback(RecvCallback recv_callback)
-    {
-        recv_callback_ = recv_callback;
-    }
+    void Reply(void* req_handle, kw::shared_ptr<Response>& response);
 
-    void Reply(void* req_handle, IResponse &response);
+    void SetPort(unsigned short port) { listen_port_ = port; }
+    void SetHost(kw::StringArg addr) { listen_addr_ = addr.data(); }
 
 private:
-    static void Request_Callback(evhttp_request* request, void *arg);
+    static void Request_Callback(evhttp_request* request, void* arg);
+    static void EventTimer(evutil_socket_t fd, short flag, void* arg);
     void EventLoop();
 
+public:
+     RecvSignal recv_signal_;
+
 private:
-    RecvCallback recv_callback_;
+    event_base* evbase_;
+    event* evtimer_;
+    evhttp* evhttp_;
+    evhttp_bound_socket* evhandle;
+    bool break_loop_;
+
+    kw::Thread thread_loop_;
 
     std::string listen_addr_;
     unsigned short listen_port_;
-
-    event_base* evbase_;
-    evhttp* evhttp_;
-    evhttp_bound_socket* evhandle;
-
-    kw::Thread thread_loop_;
 };
 
 }

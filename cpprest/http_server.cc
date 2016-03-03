@@ -7,8 +7,7 @@ namespace cpprest
 
 HttpServer::HttpServer(const char* listen_addr, unsigned short listen_port)
     :listen_addr_(listen_addr), listen_port_(listen_port),
-      thread_loop_(std::tr1::bind(&HttpServer::EventLoop,  this), "eventloop"),
-      recv_callback_(0)
+      thread_loop_(std::tr1::bind(&HttpServer::EventLoop,  this), "eventloop")
 {
     evbase_ = event_base_new();
     if(0 == evbase_)
@@ -32,6 +31,13 @@ HttpServer::HttpServer(const char* listen_addr, unsigned short listen_port)
         fprintf(stderr, "Couldn't bind %s:%d:exiting\n", listen_addr_.c_str(), listen_port);
         exit(1);
     }
+
+    break_loop_ = false;
+
+    evtimer_ = evtimer_new(evbase_, &HttpServer::EventTimer, this);
+
+    timeval one_sec = {1, 0};
+    evtimer_add(evtimer_, &one_sec);
 
     thread_loop_.Start();
 }
@@ -58,48 +64,59 @@ bool HttpServer::Start()
 
 bool HttpServer::Stop()
 {
-    event_base_loopbreak(evbase_);
+    break_loop_ = true;
     thread_loop_.Join();
 
     return true;
 }
 
-void HttpServer::Request_Callback(evhttp_request* request, void* arg)
+void HttpServer::Join()
 {
-    const char* cmdtype;
-    switch (evhttp_request_get_command(request)) {
-    case EVHTTP_REQ_GET: cmdtype = "GET"; break;
-    case EVHTTP_REQ_POST: cmdtype = "POST"; break;
-    case EVHTTP_REQ_HEAD: cmdtype = "HEAD"; break;
-    case EVHTTP_REQ_PUT: cmdtype = "PUT"; break;
-    case EVHTTP_REQ_DELETE: cmdtype = "DELETE"; break;
-    case EVHTTP_REQ_OPTIONS: cmdtype = "OPTIONS"; break;
-    case EVHTTP_REQ_TRACE: cmdtype = "TRACE"; break;
-    case EVHTTP_REQ_CONNECT: cmdtype = "CONNECT"; break;
-    case EVHTTP_REQ_PATCH: cmdtype = "PATCH"; break;
-    default: cmdtype = "unknown"; break;
-    }
+    thread_loop_.Join();
+}
 
-    printf("Received a %s request for %s\n", cmdtype, evhttp_request_get_uri(request));
+void HttpServer::EventLoop()
+{
+    event_base_dispatch(evbase_);
+}
 
-    HttpServer* http_server = static_cast<HttpServer*>(arg);
-    if(0 == http_server->recv_callback_)
+void  HttpServer::EventTimer(evutil_socket_t fd, short flag, void* arg)
+{
+    HttpServer* http_server = (HttpServer*)arg;
+    if(false == http_server->break_loop_)
     {
-        printf("unset recv_callback_ use default.\n");
+        evtimer_del(http_server->evtimer_);
 
-        IResponse response;
-        response.code_ = 200;
-
-        http_server->Reply(request, response);
+        timeval one_sec = {1, 0};
+        evtimer_add(http_server->evtimer_, &one_sec);
         return;
     }
 
-    IRequest req;
-    req.path_ = evhttp_request_get_uri(request);
+    event_base_loopbreak(http_server->evbase_);
+}
+
+void HttpServer::Request_Callback(evhttp_request* request, void* arg)
+{
+    Method method;
+    switch (evhttp_request_get_command(request))
+    {
+        case EVHTTP_REQ_GET:		method = Method_Get; 		break;
+        case EVHTTP_REQ_POST: 		method = Method_Post; 		break;
+        case EVHTTP_REQ_PUT: 		method = Method_Put; 		break;
+        case EVHTTP_REQ_DELETE: 	method = Method_Delete; 	break;
+        default: 					method = Method_UnDefine;	break;
+    }
+
+    //http_server life longger than this function
+    HttpServer* http_server = static_cast<HttpServer*>(arg);
+
+    kw::shared_ptr<Request> req(new Request);
+    req->path_ 	= evhttp_request_get_uri(request);
+    req->method = method;
 
     evkeyvalq* headers = evhttp_request_get_input_headers(request);
     for(evkeyval* header = headers->tqh_first; header; header = header->next.tqe_next)
-        req.headers_[header->key] = header->value;
+        req->headers_[header->key] = header->value;
 
     evbuffer* input_buf = evhttp_request_get_input_buffer(request);
     while (evbuffer_get_length(input_buf))
@@ -109,32 +126,27 @@ void HttpServer::Request_Callback(evhttp_request* request, void* arg)
         if (count <= 0)
             continue;
 
-        req.content_.Append(cbuf, count);
+        req->content_.Append(cbuf, count);
     }
 
-    http_server->recv_callback_((void*)request, req);
+    http_server->recv_signal_.Emit((void*)request, req);
 }
 
-void HttpServer::EventLoop()
-{
-    event_base_dispatch(evbase_);
-}
-
-void HttpServer::Reply(void* req_handle, IResponse &response)
+void HttpServer::Reply(void* req_handle, kw::shared_ptr<Response> &response)
 {
     evhttp_request* request = static_cast<evhttp_request*>(req_handle);
     evkeyvalq* headers = evhttp_request_get_output_headers(request);
-    for(cpprest::MT_HttpHeaders::const_iterator iter = response.headers_.begin();
-        response.headers_.end() != iter; ++iter)
+
+    for(cpprest::HttpHeaders::const_iterator iter = response->headers_.begin();
+        response->headers_.end() != iter; ++iter)
     {
         evhttp_add_header(headers, iter->first.c_str(), iter->second.c_str());
     }
 
-    printf("response data:%s", response.content_.Data());
     evbuffer* buf = evbuffer_new();
-    evbuffer_add(buf, response.content_.Data(), response.content_.Length());
+    evbuffer_add(buf, response->content_.Data(), response->content_.Length());
 
-    evhttp_send_reply(static_cast<evhttp_request*>(req_handle), response.code_, "", buf);
+    evhttp_send_reply(static_cast<evhttp_request*>(req_handle), response->code_, "", buf);
     evbuffer_free(buf);
 }
 

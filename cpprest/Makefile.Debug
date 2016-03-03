@@ -42,9 +42,13 @@ OBJECTS_DIR   = debug/
 ####### Files
 
 SOURCES       = cpprest.cc \
-		http_server.cc 
+		http_server.cc \
+		router.cc \
+		http_client.cpp 
 OBJECTS       = debug/cpprest.o \
-		debug/http_server.o
+		debug/http_server.o \
+		debug/router.o \
+		debug/http_client.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/shell-unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
@@ -72,9 +76,6 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_platformsupport_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_printsupport.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_printsupport_private.pri \
-		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_qml.pri \
-		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_qmltest.pri \
-		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_quick.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_sql.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_sql_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_testlib.pri \
@@ -180,18 +181,59 @@ compiler_clean:
 debug/cpprest.o: cpprest.cc cpprest.h \
 		../kaiwu/build/inc/mutex.h \
 		../kaiwu/build/inc/Singleton.h \
-		irequest.h \
+		http_server.h \
+		../kaiwu/build/inc/thread.h \
+		../kaiwu/build/inc/string_arg.h \
+		../kaiwu/build/inc/signal_slot.h \
+		../kaiwu/build/inc/shared_lib.h \
+		../kaiwu/build/inc/fmt.h \
+		request.h \
 		../kaiwu/build/inc/memory_buffer.h \
-		iresponse.h
+		zshare_def.h \
+		response.h \
+		router.h \
+		../kaiwu/build/inc/thread_pool.h \
+		../kaiwu/build/inc/condition.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug/cpprest.o cpprest.cc
 
 debug/http_server.o: http_server.cc http_server.h \
 		../kaiwu/build/inc/thread.h \
 		../kaiwu/build/inc/string_arg.h \
-		irequest.h \
+		../kaiwu/build/inc/signal_slot.h \
+		../kaiwu/build/inc/shared_lib.h \
+		../kaiwu/build/inc/fmt.h \
+		../kaiwu/build/inc/mutex.h \
+		request.h \
 		../kaiwu/build/inc/memory_buffer.h \
-		iresponse.h
+		zshare_def.h \
+		response.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug/http_server.o http_server.cc
+
+debug/router.o: router.cc router.h \
+		../kaiwu/build/inc/string_arg.h \
+		../kaiwu/build/inc/signal_slot.h \
+		../kaiwu/build/inc/shared_lib.h \
+		../kaiwu/build/inc/fmt.h \
+		../kaiwu/build/inc/mutex.h \
+		../kaiwu/build/inc/thread_pool.h \
+		../kaiwu/build/inc/condition.h \
+		../kaiwu/build/inc/thread.h \
+		zshare_def.h \
+		request.h \
+		../kaiwu/build/inc/memory_buffer.h \
+		response.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug/router.o router.cc
+
+debug/http_client.o: http_client.cpp http_client.h \
+		../kaiwu/build/inc/thread.h \
+		../kaiwu/build/inc/string_arg.h \
+		zshare_def.h \
+		../kaiwu/build/inc/shared_lib.h \
+		../kaiwu/build/inc/fmt.h \
+		request.h \
+		../kaiwu/build/inc/memory_buffer.h \
+		response.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug/http_client.o http_client.cpp
 
 ####### Install
 

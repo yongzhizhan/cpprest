@@ -6,65 +6,31 @@
 namespace cpprest
 {
 
-CppRest::CppRest()
+CppRest::CppRest(kw::StringArg host, unsigned short port, int thread_count, const RouteItems &route_items)
+    :http_server_(new HttpServer(host.data(), port)), router_(new Router(route_items, thread_count))
 {
+    recv_slot_ = http_server_->recv_signal_.Connect(std::tr1::bind(&Router::OnRecv, router_, std::tr1::placeholders::_1, std::tr1::placeholders::_2));
+    reply_slot_ = router_->reply_signal_.Connect(std::tr1::bind(&HttpServer::Reply, http_server_, std::tr1::placeholders::_1, std::tr1::placeholders::_2));
 }
 
-void CppRest::Register(HandlerInfo* handler_info)
+CppRest::~CppRest()
 {
-    kw::MutexGuard guard(mutex);
-    m_Handlers.push_back(handler_info);
+    //
 }
 
-void CppRest::UnRegister(HandlerInfo* handler_info)
+bool CppRest::Start()
 {
-    kw::MutexGuard guard(mutex);
-    MT_HandlerInfos::iterator tIter = std::find(m_Handlers.begin(), m_Handlers.end(), handler_info);
-
-    if(m_Handlers.end() == tIter)
-        return;
-
-    m_Handlers.erase(tIter);
+    return http_server_->Start();
 }
 
-HandlerInfo* CppRest::FindByPath(const char* path, int len)
+bool CppRest::Stop()
 {
-    kw::MutexGuard guard(mutex);
-    for(MT_HandlerInfos::iterator tIter = m_Handlers.begin(); m_Handlers.end() != tIter; ++tIter)
-    {
-        HandlerInfo* handler_info = (HandlerInfo*)*tIter;
-
-        printf("debug check path:%s\n", path);
-
-        if(handler_info->param_info_["path"] != path)
-            continue;
-
-        return handler_info;
-    }
-
-    return 0;
+    return http_server_->Stop();
 }
 
-IResponse CppRest::Dispatch(IRequest& request)
+void CppRest::Join()
 {
-    printf("On Request Path:%s\n", request.path_.c_str());
-    HandlerInfo* handler_info = FindByPath(request.path_.c_str(), request.path_.length());
-    if(0 == handler_info)
-    {
-        IResponse response;
-        char error[] = "path not exits.";
-        response.content_.Append(error, sizeof error);
-
-        return response;
-    }
-
-    IResponse response = handler_info->handler_->Run(0, request);
-
-    cpprest::HandlerInfo::MT_ParamInfo::iterator iter = handler_info->param_info_.find("method");
-    if(handler_info->param_info_.end() != iter)
-        response.headers_["Content-Type"] = iter->second;
-
-    return response;
+    return http_server_->Join();
 }
 
 }

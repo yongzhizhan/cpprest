@@ -16,58 +16,53 @@ public:
 
     }
 
-    void RecvCallback(void* req_handle, cpprest::IRequest& req)
+    kw::shared_ptr<cpprest::Response> foo(const kw::shared_ptr<cpprest::Request>& request)
     {
-        cpprest::IResponse response = CppRestSingleton.Dispatch(req);
-        http_server_->Reply(req_handle, response);
+        kw::shared_ptr<cpprest::Response> response(new cpprest::Response);
+        response->code_ = 200;
+        response->content_.Append("i am test....");
+
+        return response;
+    }
+
+    cpprest::RouteItems GetRouteItems()
+    {
+        cpprest::RouteItems items;
+        cpprest::RouteItem item;
+
+        item.path = "/test";
+        item.method = cpprest::Method_Post;
+        item.functor = std::tr1::bind(&CpprestTest::foo, this, std::tr1::placeholders::_1);
+
+        items.push_back(item);
+
+        return items;
+    }
+
+    void StopRest()
+    {
+        sleep(3);
+        rest_frame->Stop();
     }
 
 protected:
-    std::tr1::shared_ptr<cpprest::HttpServer> http_server_;
+    kw::shared_ptr<cpprest::CppRest> rest_frame;
 };
 
 TEST_F(CpprestTest, Default)
 {
-    http_server_.reset(new cpprest::HttpServer("0.0.0.0", 12345));
-    http_server_->SetRecvCallback(std::tr1::bind(&CpprestTest::RecvCallback, this,
-                                                 std::tr1::placeholders::_1,
-                                                 std::tr1::placeholders::_2));
-    http_server_->Start();
+    int thread_count = 5;
+    const char* host = "0.0.0.0";
+    unsigned short port = 12345;
 
-    //TODO: fix this test, use http client
-    sleep(2);
+    printf("listen on %s:%d, thread:%d...\n", host, port, thread_count);
 
-    http_server_->Stop();
+    cpprest::RouteItems items = GetRouteItems();
+    rest_frame.reset(new cpprest::CppRest(host, port, thread_count, items));
+    rest_frame->Start();
+
+    kw::Thread thread(std::tr1::bind(&CpprestTest::StopRest, this));
+    thread.Start();
+
+    rest_frame->Join();
 }
-
-$Route(Path="/test", Consume="text/plain", Produce="application/json")
-Response test(Request& request)
-{
-    printf("request:%s\n", request.content_.Data());
-    Response response;
-
-    char buf[] = "12345";
-    response.content_.Append(buf, sizeof buf);
-
-    return response;
-}
-
-$Route(Path="/test2", Consume="text/plain", Produce="application/json")
-Response test2(Request& path)
-{
-    Response response;
-    return response;
-}
-
-$Route(Path="/Method", Method="Get")
-Response method_test(Request& path)
-{
-    Response response;
-    return response;
-}
-
-
-
-
-
-

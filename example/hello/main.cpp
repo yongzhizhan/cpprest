@@ -3,43 +3,26 @@
 #include <http_server.h>
 #include <cpprest.h>
 
-class CpprestServer
-{
-public:
-    void RecvCallback(void* req_handle, cpprest::IRequest& req)
-    {
-        cpprest::IResponse response = CppRestSingleton.Dispatch(req);
-        http_server_->Reply(req_handle, response);
-    }
-
-    void Start(unsigned short port)
-    {
-        http_server_.reset(new cpprest::HttpServer("0.0.0.0", port));
-        http_server_->SetRecvCallback(std::tr1::bind(&CpprestServer::RecvCallback, this,
-                                                     std::tr1::placeholders::_1,
-                                                     std::tr1::placeholders::_2));
-        http_server_->Start();
-    }
-
-    void Stop()
-    {
-        http_server_->Stop();
-    }
-
-protected:
-    std::tr1::shared_ptr<cpprest::HttpServer> http_server_;
-};
 
 int main()
 {
-    CpprestServer cpprest_server;
-
+    const char* host = "0.0.0.0";
+    int thread_count = 5;
     unsigned short port = 12345;
-    printf("listen on %d...\n", port);
+    printf("listen on %s:%d, thread:%d...\n", host, port, thread_count);
 
-    cpprest_server.Start(port);
+    cpprest::RouteItems items;
+    cpprest::RouteItem item;
+
+    item.path = "/test";
+    item.method = cpprest::Method_Get;
+
+    items.push_back(item);
+
+    cpprest::CppRest rest_frame(host, port, thread_count, items);
+    rest_frame.Start();
 
     getchar();
 
-    cpprest_server.Stop();
+    rest_frame.Stop();
 }
