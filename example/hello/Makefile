@@ -269,10 +269,40 @@ compiler_clean:
 
 ####### Compile
 
-main.o: main.cpp 
+main.o: main.cpp ../../build/inc/http_server.h \
+		../../kaiwu/build/inc/thread.h \
+		../../kaiwu/build/inc/string_arg.h \
+		../../kaiwu/build/inc/signal_slot.h \
+		../../kaiwu/build/inc/shared_lib.h \
+		../../kaiwu/build/inc/fmt.h \
+		../../kaiwu/build/inc/mutex.h \
+		../../build/inc/request.h \
+		../../kaiwu/build/inc/memory_buffer.h \
+		../../build/inc/zshare_def.h \
+		../../build/inc/response.h \
+		../../build/inc/cpprest.h \
+		../../kaiwu/build/inc/Singleton.h \
+		../../build/inc/router.h \
+		../../kaiwu/build/inc/thread_pool.h \
+		../../kaiwu/build/inc/condition.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
 
-test.o: test.cpp 
+test.o: test.cpp ../../build/inc/cpprest.h \
+		../../kaiwu/build/inc/mutex.h \
+		../../kaiwu/build/inc/Singleton.h \
+		../../build/inc/http_server.h \
+		../../kaiwu/build/inc/thread.h \
+		../../kaiwu/build/inc/string_arg.h \
+		../../kaiwu/build/inc/signal_slot.h \
+		../../kaiwu/build/inc/shared_lib.h \
+		../../kaiwu/build/inc/fmt.h \
+		../../build/inc/request.h \
+		../../kaiwu/build/inc/memory_buffer.h \
+		../../build/inc/zshare_def.h \
+		../../build/inc/response.h \
+		../../build/inc/router.h \
+		../../kaiwu/build/inc/thread_pool.h \
+		../../kaiwu/build/inc/condition.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o test.o test.cpp
 
 ####### Install

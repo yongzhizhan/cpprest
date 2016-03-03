@@ -3,6 +3,13 @@
 #include <http_server.h>
 #include <cpprest.h>
 
+kw::shared_ptr<cpprest::Response> hello_functor(const kw::shared_ptr<cpprest::Request>& request)
+{
+    kw::shared_ptr<cpprest::Response> response;
+    response->content_.Append("test");
+
+    return response;
+}
 
 int main()
 {
@@ -16,13 +23,13 @@ int main()
 
     item.path = "/test";
     item.method = cpprest::Method_Get;
+    item.functor = std::tr1::bind(&hello_functor, std::tr1::placeholders::_1);
 
     items.push_back(item);
 
     cpprest::CppRest rest_frame(host, port, thread_count, items);
     rest_frame.Start();
 
-    getchar();
-
+    sleep(100);
     rest_frame.Stop();
 }
