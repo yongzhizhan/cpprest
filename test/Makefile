@@ -48,7 +48,7 @@ OBJECTS_DIR   = ./
 SOURCES       = cpprest_test.cc \
 		http_server_test.cc \
 		main.cc \
-		make_handler_info_test.cpp 
+		make_handler_info_test.cc 
 OBJECTS       = cpprest_test.o \
 		http_server_test.o \
 		main.o \
@@ -307,7 +307,7 @@ http_server_test.o: http_server_test.cc ../build/inc/http_server.h \
 main.o: main.cc 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cc
 
-make_handler_info_test.o: make_handler_info_test.cpp ../build/inc/cpprest.h \
+make_handler_info_test.o: make_handler_info_test.cc ../build/inc/cpprest.h \
 		../kaiwu/build/inc/mutex.h \
 		../kaiwu/build/inc/Singleton.h \
 		../build/inc/http_server.h \
@@ -323,7 +323,7 @@ make_handler_info_test.o: make_handler_info_test.cpp ../build/inc/cpprest.h \
 		../build/inc/router.h \
 		../kaiwu/build/inc/thread_pool.h \
 		../kaiwu/build/inc/condition.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o make_handler_info_test.o make_handler_info_test.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o make_handler_info_test.o make_handler_info_test.cc
 
 ####### Install
 

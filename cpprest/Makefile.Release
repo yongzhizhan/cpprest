@@ -44,11 +44,13 @@ OBJECTS_DIR   = release/
 SOURCES       = cpprest.cc \
 		http_server.cc \
 		router.cc \
-		http_client.cpp 
+		http_client.cc \
+		request.cpp 
 OBJECTS       = release/cpprest.o \
 		release/http_server.o \
 		release/router.o \
-		release/http_client.o
+		release/http_client.o \
+		release/request.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/shell-unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
@@ -224,7 +226,7 @@ release/router.o: router.cc router.h \
 		response.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release/router.o router.cc
 
-release/http_client.o: http_client.cpp http_client.h \
+release/http_client.o: http_client.cc http_client.h \
 		../kaiwu/build/inc/thread.h \
 		../kaiwu/build/inc/string_arg.h \
 		zshare_def.h \
@@ -233,7 +235,15 @@ release/http_client.o: http_client.cpp http_client.h \
 		request.h \
 		../kaiwu/build/inc/memory_buffer.h \
 		response.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release/http_client.o http_client.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release/http_client.o http_client.cc
+
+release/request.o: request.cpp request.h \
+		../kaiwu/build/inc/memory_buffer.h \
+		zshare_def.h \
+		../kaiwu/build/inc/shared_lib.h \
+		../kaiwu/build/inc/fmt.h \
+		../kaiwu/build/inc/string_arg.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release/request.o request.cpp
 
 ####### Install
 

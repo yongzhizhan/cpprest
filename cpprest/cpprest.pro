@@ -38,4 +38,5 @@ SOURCES += \
     cpprest.cc \
     http_server.cc \
     router.cc \
-    http_client.cpp
+    http_client.cc \
+    request.cpp

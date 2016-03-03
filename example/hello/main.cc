@@ -5,7 +5,7 @@
 
 kw::shared_ptr<cpprest::Response> hello_functor(const kw::shared_ptr<cpprest::Request>& request)
 {
-    kw::shared_ptr<cpprest::Response> response;
+    kw::shared_ptr<cpprest::Response> response(new cpprest::Response);
     response->content_.Append("test");
 
     return response;

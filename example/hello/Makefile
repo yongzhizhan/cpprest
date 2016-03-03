@@ -45,8 +45,8 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = main.cpp \
-		test.cpp 
+SOURCES       = main.cc \
+		test.cc 
 OBJECTS       = main.o \
 		test.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
@@ -269,7 +269,7 @@ compiler_clean:
 
 ####### Compile
 
-main.o: main.cpp ../../build/inc/http_server.h \
+main.o: main.cc ../../build/inc/http_server.h \
 		../../kaiwu/build/inc/thread.h \
 		../../kaiwu/build/inc/string_arg.h \
 		../../kaiwu/build/inc/signal_slot.h \
@@ -285,9 +285,9 @@ main.o: main.cpp ../../build/inc/http_server.h \
 		../../build/inc/router.h \
 		../../kaiwu/build/inc/thread_pool.h \
 		../../kaiwu/build/inc/condition.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cc
 
-test.o: test.cpp ../../build/inc/cpprest.h \
+test.o: test.cc ../../build/inc/cpprest.h \
 		../../kaiwu/build/inc/mutex.h \
 		../../kaiwu/build/inc/Singleton.h \
 		../../build/inc/http_server.h \
@@ -303,7 +303,7 @@ test.o: test.cpp ../../build/inc/cpprest.h \
 		../../build/inc/router.h \
 		../../kaiwu/build/inc/thread_pool.h \
 		../../kaiwu/build/inc/condition.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o test.o test.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o test.o test.cc
 
 ####### Install
 

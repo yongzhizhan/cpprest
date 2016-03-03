@@ -13,5 +13,5 @@ SOURCES += \
     cpprest_test.cc \
     http_server_test.cc \
     main.cc \
-    make_handler_info_test.cpp
+    make_handler_info_test.cc
 

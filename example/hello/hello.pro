@@ -9,6 +9,7 @@ LIBS += -L../../build -lcpprestd-1.0
 LIBS += -L../../kaiwu/build -lkaiwud-1.0
 LIBS += -L"/usr/local/lib/" -lgtest -lpthread -levent
 
-SOURCES += main.cpp \
-    test.cpp
+SOURCES += \
+    main.cc \
+    test.cc
 

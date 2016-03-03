@@ -97,37 +97,10 @@ void  HttpServer::EventTimer(evutil_socket_t fd, short flag, void* arg)
 
 void HttpServer::Request_Callback(evhttp_request* request, void* arg)
 {
-    Method method;
-    switch (evhttp_request_get_command(request))
-    {
-        case EVHTTP_REQ_GET:		method = Method_Get; 		break;
-        case EVHTTP_REQ_POST: 		method = Method_Post; 		break;
-        case EVHTTP_REQ_PUT: 		method = Method_Put; 		break;
-        case EVHTTP_REQ_DELETE: 	method = Method_Delete; 	break;
-        default: 					method = Method_UnDefine;	break;
-    }
-
     //http_server life longger than this function
     HttpServer* http_server = static_cast<HttpServer*>(arg);
 
-    kw::shared_ptr<Request> req(new Request);
-    req->path_ 	= evhttp_request_get_uri(request);
-    req->method = method;
-
-    evkeyvalq* headers = evhttp_request_get_input_headers(request);
-    for(evkeyval* header = headers->tqh_first; header; header = header->next.tqe_next)
-        req->headers_[header->key] = header->value;
-
-    evbuffer* input_buf = evhttp_request_get_input_buffer(request);
-    while (evbuffer_get_length(input_buf))
-    {
-        char cbuf[128];
-        int count = evbuffer_remove(input_buf, cbuf, sizeof(cbuf));
-        if (count <= 0)
-            continue;
-
-        req->content_.Append(cbuf, count);
-    }
+    kw::shared_ptr<Request> req(new Request(request));
 
     http_server->recv_signal_.Emit((void*)request, req);
 }

@@ -26,11 +26,11 @@ void Router::Run(void* handle, kw::shared_ptr<Request>& request)
     for(RouteItems::iterator iter = route_items_.begin(); iter != route_items_.end(); ++iter)
     {
         //filter path
-        if(iter->path != request->path_)
+        if(iter->path != request->Path())
             continue;
 
         //filter get post delete put
-        if(Method_UnDefine != request->method && iter->method != request->method)
+        if(Method_UnDefine != request->ReqMethod() && iter->method != request->ReqMethod())
             continue;
 
         //execute functor
@@ -44,7 +44,7 @@ void Router::Run(void* handle, kw::shared_ptr<Request>& request)
     reply_signal_.Emit(handle, response);
 
     //TODO: add log
-    printf("error...\n");
+    printf("error, path:%s, method:%d...\n", request->Path(), request->ReqMethod());
 }
 
 }
