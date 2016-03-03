@@ -26,7 +26,8 @@ void Router::Run(void* handle, kw::shared_ptr<Request>& request)
     for(RouteItems::iterator iter = route_items_.begin(); iter != route_items_.end(); ++iter)
     {
         //filter path
-        if(iter->path != request->Path())
+        printf("path:%s, request path:%s\n", iter->path, request->Path());
+        if(0 != strncmp(iter->path, request->Path(), strlen(iter->path)))
             continue;
 
         //filter get post delete put
