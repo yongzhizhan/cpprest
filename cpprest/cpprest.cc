@@ -32,9 +32,4 @@ void CppRest::Join()
     return http_server_->Join();
 }
 
-void CppRest::Reply(void* req_handle, kw::shared_ptr<Response>& response)
-{
-    http_server_->Reply(req_handle, response);
-}
-
 }

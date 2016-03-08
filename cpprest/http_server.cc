@@ -113,9 +113,17 @@ void HttpServer::RequestCB(evhttp_request* request, void* arg)
     HttpServer* http_server = static_cast<HttpServer*>(arg);
     kw::shared_ptr<Request> req(new Request(request));
 
+    evhttp_connection_set_closecb(request->evcon, &HttpServer::CloseCB, arg);
+
     printf("request, handle:%p.....\n", request);
 
     http_server->recv_signal_.Emit((void*)request, req);
+}
+
+void HttpServer::CloseCB(evhttp_connection* conn, void* arg)
+{
+    HttpServer* http_server = static_cast<HttpServer*>(arg);
+    http_server->close_signal_.Emit(conn);
 }
 
 void HttpServer::OnRead(int socket, short flag, void *arg)
@@ -179,9 +187,9 @@ void HttpServer::Reply_(void* req_handle, kw::shared_ptr<Response> &response)
     evbuffer* buf = evbuffer_new();
     evbuffer_add(buf, response->content_.Data(), response->content_.Length());
 
-    printf("reply, handle:%p, code:%d,Content:%s.....\n", req_handle, response->code_, response->content_.Data());
+    //printf("reply, handle:%p, code:%d,Content:%s.....\n", req_handle, response->code_, response->content_.Data());
     //evhttp_send_reply(static_cast<evhttp_request*>(req_handle), response->code_, "", buf);
-    evhttp_send_reply(static_cast<evhttp_request*>(req_handle), HTTP_OK, "Client", buf);
+    evhttp_send_reply(static_cast<evhttp_request*>(req_handle), response->code_, "", buf);
     evbuffer_free(buf);
 }
 

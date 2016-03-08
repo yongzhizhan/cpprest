@@ -21,6 +21,7 @@ class HttpServer : public boost::noncopyable
 {
 public:
     typedef kw::Signal<void(void*, kw::shared_ptr<Request>&)> RecvSignal;
+    typedef kw::Signal<void(void* conn)> CloseSignal;
     typedef kw::function<void()> EventTask;
 
     HttpServer		(const char* listen_addr="0.0.0.0", unsigned short listen_port=8080);
@@ -37,12 +38,14 @@ public:
 
 private:
     static void RequestCB(evhttp_request* request, void* arg);
+    static void CloseCB(evhttp_connection *conn, void* arg);
     static void OnRead(evutil_socket_t socket, short flag, void* arg);
     void Reply_(void* req_handle, kw::shared_ptr<Response>& response);
     void EventLoop();
 
 public:
-     RecvSignal recv_signal_;
+    RecvSignal recv_signal_;
+    CloseSignal close_signal_;
 
 private:
     event_base* evbase_;

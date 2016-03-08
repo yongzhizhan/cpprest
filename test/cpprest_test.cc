@@ -32,6 +32,16 @@ public:
         return kw::shared_ptr<cpprest::Response>();
     }
 
+    kw::shared_ptr<cpprest::Response> Close(const kw::shared_ptr<cpprest::Request>& request)
+    {
+        return kw::shared_ptr<cpprest::Response>();
+    }
+
+    void OnClose(void* conn)
+    {
+        EXPECT_TRUE(0 != conn);
+    }
+
     cpprest::RouteItems GetRouteItems()
     {
         cpprest::RouteItems items;
@@ -49,6 +59,11 @@ public:
 
         items.push_back(item);
 
+        item.path = "/close";
+        item.method = cpprest::Method_Get;
+        item.functor = std::tr1::bind(&CpprestTest::Close, this, std::tr1::placeholders::_1);
+
+        items.push_back(item);
         return items;
     }
 
@@ -59,12 +74,12 @@ public:
         response->code_ = 200;
         response->content_.Append("delay send");
 
-        rest_frame->Reply(request->RequestHandler(), response);
+        rest_frame->Server()->Reply(request->RequestHandler(), response);
     }
 
     void StopRest()
     {
-        sleep(100);
+        sleep(30);
         rest_frame->Stop();
     }
 
@@ -100,6 +115,26 @@ TEST_F(CpprestTest, DelaySend)
 
     cpprest::RouteItems items = GetRouteItems();
     rest_frame.reset(new cpprest::CppRest(host, port, thread_count, items));
+    rest_frame->Start();
+
+    kw::Thread thread(std::tr1::bind(&CpprestTest::StopRest, this));
+    thread.Start();
+
+    rest_frame->Join();
+}
+
+TEST_F(CpprestTest, Close)
+{
+    int thread_count = 5;
+    const char* host = "0.0.0.0";
+    unsigned short port = 12345;
+
+    printf("Close -> listen on %s:%d, thread:%d...\n", host, port, thread_count);
+
+    cpprest::RouteItems items = GetRouteItems();
+    rest_frame.reset(new cpprest::CppRest(host, port, thread_count, items));
+    kw::SlotHandle slot_handle = rest_frame->Server()->close_signal_.Connect(std::tr1::bind(&CpprestTest::OnClose, this, std::tr1::placeholders::_1));
+
     rest_frame->Start();
 
     kw::Thread thread(std::tr1::bind(&CpprestTest::StopRest, this));

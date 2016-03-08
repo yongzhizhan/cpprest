@@ -42,12 +42,12 @@ void Router::Run(void* handle, kw::shared_ptr<Request>& request)
         return;
     }
 
+    //TODO: add log
+    printf("error, path:%s, method:%d...\n", request->Path(), request->ReqMethod());
+
     kw::shared_ptr<Response> response(new Response);
     response->code_ = HTTP_NOTIMPLEMENTED;
     reply_signal_.Emit(handle, response);
-
-    //TODO: add log
-    printf("error, path:%s, method:%d...\n", request->Path(), request->ReqMethod());
 }
 
 }
