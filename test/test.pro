@@ -3,7 +3,7 @@ CONFIG += console
 CONFIG -= app_bundle
 CONFIG -= qt
 DESTDIR = ../build
-INCLUDEPATH += ../build/inc ../kaiwu/build/inc
+INCLUDEPATH += ../cpprest ../kaiwu/build/inc
 
 LIBS += -L../build -lcpprestd-1.0
 LIBS += -L../kaiwu/build -lkaiwud-1.0

@@ -75,4 +75,9 @@ int Request::GetParamI(const char* name, int def)
     return 0 == val ? def : atoi(val);
 }
 
+evhttp_request* Request::RequestHandler()
+{
+    return req_handler_;
+}
+
 }

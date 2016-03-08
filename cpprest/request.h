@@ -6,8 +6,10 @@
 #include <map>
 #include <string.h>
 #include <memory_buffer.h>
+#include "shared_lib.h"
+#include "string_arg.h"
 #include "zshare_def.h"
-#include <string_arg.h>
+#include "signal_slot.h"
 
 namespace cpprest{
 
@@ -27,6 +29,8 @@ public:
 
     const char* GetParamS(const char* name, const char* def);
     int GetParamI(const char* name, int def);
+
+    evhttp_request* RequestHandler();
 
 private:
     evhttp_request* req_handler_;

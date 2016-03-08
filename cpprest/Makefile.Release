@@ -208,7 +208,8 @@ release/http_server.o: http_server.cc http_server.h \
 		request.h \
 		../kaiwu/build/inc/memory_buffer.h \
 		zshare_def.h \
-		response.h
+		response.h \
+		../kaiwu/build/inc/thread_info.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release/http_server.o http_server.cc
 
 release/router.o: router.cc router.h \
@@ -234,15 +235,19 @@ release/http_client.o: http_client.cc http_client.h \
 		../kaiwu/build/inc/fmt.h \
 		request.h \
 		../kaiwu/build/inc/memory_buffer.h \
+		../kaiwu/build/inc/signal_slot.h \
+		../kaiwu/build/inc/mutex.h \
 		response.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release/http_client.o http_client.cc
 
 release/request.o: request.cpp request.h \
 		../kaiwu/build/inc/memory_buffer.h \
-		zshare_def.h \
 		../kaiwu/build/inc/shared_lib.h \
 		../kaiwu/build/inc/fmt.h \
-		../kaiwu/build/inc/string_arg.h
+		../kaiwu/build/inc/string_arg.h \
+		zshare_def.h \
+		../kaiwu/build/inc/signal_slot.h \
+		../kaiwu/build/inc/mutex.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release/request.o request.cpp
 
 ####### Install

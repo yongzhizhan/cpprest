@@ -36,12 +36,14 @@ void Router::Run(void* handle, kw::shared_ptr<Request>& request)
 
         //execute functor
         kw::shared_ptr<Response> response = iter->functor(request);
-        reply_signal_.Emit(handle, response);
+        if(0 != response)
+            reply_signal_.Emit(handle, response);
+
         return;
     }
 
     kw::shared_ptr<Response> response(new Response);
-    response->code_ = 501;
+    response->code_ = HTTP_NOTIMPLEMENTED;
     reply_signal_.Emit(handle, response);
 
     //TODO: add log

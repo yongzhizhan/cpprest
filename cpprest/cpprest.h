@@ -33,6 +33,8 @@ public:
     bool Stop();
     void Join();
 
+    void Reply(void* req_handle, kw::shared_ptr<Response>& response);
+
 private:
     RouterPtr router_;
     HttpServerPtr http_server_;

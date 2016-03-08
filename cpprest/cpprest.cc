@@ -15,7 +15,6 @@ CppRest::CppRest(kw::StringArg host, unsigned short port, int thread_count, cons
 
 CppRest::~CppRest()
 {
-    //
 }
 
 bool CppRest::Start()
@@ -31,6 +30,11 @@ bool CppRest::Stop()
 void CppRest::Join()
 {
     return http_server_->Join();
+}
+
+void CppRest::Reply(void* req_handle, kw::shared_ptr<Response>& response)
+{
+    http_server_->Reply(req_handle, response);
 }
 
 }

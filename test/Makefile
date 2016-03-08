@@ -15,7 +15,7 @@ CXX           = g++
 DEFINES       = 
 CFLAGS        = -m64 -pipe -g -Wall -W -fPIE $(DEFINES)
 CXXFLAGS      = -m64 -pipe -g -Wall -W -fPIE $(DEFINES)
-INCPATH       = -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I. -I../build/inc -I../kaiwu/build/inc
+INCPATH       = -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I. -I../cpprest -I../kaiwu/build/inc
 LINK          = g++
 LFLAGS        = -m64
 LIBS          = $(SUBLIBS) -L../build -lcpprestd-1.0 -L../kaiwu/build -lkaiwud-1.0 -L/usr/local/lib/ -lgtest -lpthread -levent 
@@ -273,54 +273,54 @@ compiler_clean:
 
 ####### Compile
 
-cpprest_test.o: cpprest_test.cc ../build/inc/cpprest.h \
+cpprest_test.o: cpprest_test.cc ../cpprest/cpprest.h \
 		../kaiwu/build/inc/mutex.h \
 		../kaiwu/build/inc/Singleton.h \
-		../build/inc/http_server.h \
+		../cpprest/http_server.h \
 		../kaiwu/build/inc/thread.h \
 		../kaiwu/build/inc/string_arg.h \
 		../kaiwu/build/inc/signal_slot.h \
 		../kaiwu/build/inc/shared_lib.h \
 		../kaiwu/build/inc/fmt.h \
-		../build/inc/request.h \
+		../cpprest/request.h \
 		../kaiwu/build/inc/memory_buffer.h \
-		../build/inc/zshare_def.h \
-		../build/inc/response.h \
-		../build/inc/router.h \
+		../cpprest/zshare_def.h \
+		../cpprest/response.h \
+		../cpprest/router.h \
 		../kaiwu/build/inc/thread_pool.h \
 		../kaiwu/build/inc/condition.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o cpprest_test.o cpprest_test.cc
 
-http_server_test.o: http_server_test.cc ../build/inc/http_server.h \
+http_server_test.o: http_server_test.cc ../cpprest/http_server.h \
 		../kaiwu/build/inc/thread.h \
 		../kaiwu/build/inc/string_arg.h \
 		../kaiwu/build/inc/signal_slot.h \
 		../kaiwu/build/inc/shared_lib.h \
 		../kaiwu/build/inc/fmt.h \
 		../kaiwu/build/inc/mutex.h \
-		../build/inc/request.h \
+		../cpprest/request.h \
 		../kaiwu/build/inc/memory_buffer.h \
-		../build/inc/zshare_def.h \
-		../build/inc/response.h
+		../cpprest/zshare_def.h \
+		../cpprest/response.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o http_server_test.o http_server_test.cc
 
 main.o: main.cc 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cc
 
-make_handler_info_test.o: make_handler_info_test.cc ../build/inc/cpprest.h \
+make_handler_info_test.o: make_handler_info_test.cc ../cpprest/cpprest.h \
 		../kaiwu/build/inc/mutex.h \
 		../kaiwu/build/inc/Singleton.h \
-		../build/inc/http_server.h \
+		../cpprest/http_server.h \
 		../kaiwu/build/inc/thread.h \
 		../kaiwu/build/inc/string_arg.h \
 		../kaiwu/build/inc/signal_slot.h \
 		../kaiwu/build/inc/shared_lib.h \
 		../kaiwu/build/inc/fmt.h \
-		../build/inc/request.h \
+		../cpprest/request.h \
 		../kaiwu/build/inc/memory_buffer.h \
-		../build/inc/zshare_def.h \
-		../build/inc/response.h \
-		../build/inc/router.h \
+		../cpprest/zshare_def.h \
+		../cpprest/response.h \
+		../cpprest/router.h \
 		../kaiwu/build/inc/thread_pool.h \
 		../kaiwu/build/inc/condition.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o make_handler_info_test.o make_handler_info_test.cc
