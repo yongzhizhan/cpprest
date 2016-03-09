@@ -115,7 +115,7 @@ void HttpServer::RequestCB(evhttp_request* request, void* arg)
 
     evhttp_connection_set_closecb(request->evcon, &HttpServer::CloseCB, arg);
 
-    printf("request, handle:%p.....\n", request);
+    //printf("request, handle:%p.....\n", request);
 
     http_server->recv_signal_.Emit((void*)request, req);
 }

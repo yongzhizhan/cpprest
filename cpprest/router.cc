@@ -20,13 +20,13 @@ void Router::OnRecv(void* handle, kw::shared_ptr<Request>& request)
 
 void Router::Run(void* handle, kw::shared_ptr<Request>& request)
 {
-    printf("Run....\n");
+    //printf("Run....\n");
 
     //multiply thread read is safe
     for(RouteItems::iterator iter = route_items_.begin(); iter != route_items_.end(); ++iter)
     {
         //filter path
-        printf("path:%s, request path:%s\n", iter->path, request->Path());
+        //printf("path:%s, request path:%s\n", iter->path, request->Path());
         if(0 != strncmp(iter->path, request->Path(), strlen(iter->path)))
             continue;
 
@@ -43,7 +43,7 @@ void Router::Run(void* handle, kw::shared_ptr<Request>& request)
     }
 
     //TODO: add log
-    printf("error, path:%s, method:%d...\n", request->Path(), request->ReqMethod());
+    //printf("error, path:%s, method:%d...\n", request->Path(), request->ReqMethod());
 
     kw::shared_ptr<Response> response(new Response);
     response->code_ = HTTP_NOTIMPLEMENTED;
